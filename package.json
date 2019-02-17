@@ -1,0 +1,12 @@
+{
+  "name": "eskill-kb-creator",
+  "version": "0.1.0",
+  "description": "Create a Knowledge Base for your Avatar",
+  "main": "index.js",
+  "author": "charles.lobo@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "cote": "^0.19.1",
+    "elife-utils": "everlifeai/elife-utils"
+  }
+}
