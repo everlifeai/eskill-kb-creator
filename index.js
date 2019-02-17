@@ -152,8 +152,7 @@ function resp_nxt(msg, ctx) {
     ctx.slot.resp = msg
     ctx.kb.data.push(ctx.slot)
     ctx.slot = null
-    saveKB(ctx.kb)
-    return `Saved in KB. What's the next "slot: Question?"`
+    return `Added to KB. What's the next "slot: Question?"`
 }
 
 function resp_nxtq(msg, ctx) {
@@ -197,12 +196,15 @@ function isBye(msg) {
 
 function okDone(ctx) {
     let name = ctx.kb.name
+    saveKB(ctx.kb)
     ctx.ctx = null
     ctx.kb = null
     return [
         `Ok bye!`,
         `Bye`,
         `Done creating ${name}. You can create a new KB using '/make_kb'`,
+        `Saved ${name}. You can create a new KB using '/make_kb'`,
+        `Saved ${name}`,
     ]
 }
 
