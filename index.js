@@ -126,7 +126,7 @@ function resp_start(msg, ctx) {
     ]
     ctx.ctx = 'kb-started'
     ctx.kb = { name: name }
-    return `Wonderful! Let's make a new Knowledge Base for the user's hobbies. How would you like the user to start gathering this information? (For eg: "Ask about me")`
+    return `Wonderful! Let's make a new Knowledge Base for the user's ${name}. How would you like the user to start gathering this information? (For eg: "Ask about me")`
 }
 
 function resp_enter(msg, ctx) {
