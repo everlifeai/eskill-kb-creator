@@ -149,7 +149,7 @@ function resp_nxt(msg, ctx) {
     if(isBye(msg)) return okDone(ctx)
 
     ctx.ctx = 'nxtq'
-    ctx.slot.resp = msg
+    ctx.slot.resp = msg.replace(ctx.user_reply, () => '$$')
     ctx.kb.data.push(ctx.slot)
     ctx.slot = null
     return `Added to KB. What's the next "slot: Question?"`
@@ -171,7 +171,35 @@ function resp_nxtq(msg, ctx) {
 
     ctx.ctx = 'usr-nxt'
     ctx.slot = { slot: slot, q: q }
-    return `User says "$$". Say something back now`
+    ctx.user_reply = get_random_user_reply_1()
+    return `User says "${ctx.user_reply}". Say something back to him`
+
+
+    /*      problem/
+     * When creating a Knowledge base, we would like to reply to the
+     * user using their own words:
+     *      user: I am Charles
+     *      us: Nice to meet you Charles!
+     *
+     *      way/
+     * We don't know what the user will say, of course, so we just reply
+     * with some random phrase that the KB developer will have to
+     * imagine is the user's reply.
+     */
+    function get_random_user_reply_1() {
+        let replies = [
+            "crocodile_dundee",
+            "fast_flash",
+            "big_splash",
+            "big_blue",
+            "whale_fat",
+            "laugh_python",
+            "sing_parrot",
+        ]
+
+        let ndx = Math.floor(Math.random()*replies.length)
+        return replies[ndx]
+    }
 }
 
 function isBye(msg) {
