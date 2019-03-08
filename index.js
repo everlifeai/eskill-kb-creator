@@ -103,6 +103,26 @@ function startMicroservice() {
 }
 
 /*      outcome/
+ * Return a function that sends a set of messages, one after another as
+ * a nice chatty sequence.
+ */
+function sendReplies(replies) {
+
+    return function(req) {
+        send_replies_1(0)
+
+        function send_replies_1(ndx) {
+            if(ndx >= replies.length) return
+            if(replies[ndx]) sendReply(replies[ndx], req)
+            setTimeout(() => {
+                send_replies_1(ndx+1)
+            }, 3500)
+        }
+    }
+}
+
+
+/*      outcome/
  * To give the feeling of a real(ish) conversation we don't
  * mechanically reply the same everytime. Instead, if given a set of
  * options, we randomly pick one to reply.
@@ -126,14 +146,30 @@ function resp_start(msg, ctx) {
     ]
     ctx.ctx = 'kb-started'
     ctx.kb = { name: name }
-    return `Wonderful! Let's make a new Knowledge Base for the user's ${name}. How would you like the user to start gathering this information? (For eg: "Ask about me")`
+    return sendReplies([
+        `Alright Great! Let's create a new Knowledge Base for someone's ${name}`,
+        `As a Knowledge Base (KB) creator you will control EVERYTHING I say while the KB is being populated`,
+        `Thrilling isn't it? :-)`,
+        `To start with, what should the person say to begin your KB? (For example - if your KB was about personal info you'd start when the person says: "Ask about me")`,
+
+    ])
 }
 
 function resp_enter(msg, ctx) {
     if(ctx.ctx != 'kb-started') return
     ctx.ctx = '1stq'
     ctx.kb.startPhrase = msg
-    return `Great. When the user says "${ctx.kb.startPhrase}" I will open this knowledge base and ask questions to fill in the information. What is the first question I should ask and for what? (For eg: "name: What is your name?")`
+    return sendReplies([
+        `Great. When the user says "${ctx.kb.startPhrase}" I will open this knowledge base and ask questions to fill in the information`,
+        `Now, because you control everything I say during this time, you should keep two things in mind`,
+        `First, when getting the user to fill in some details it's usually nice to ask a question. For example, if you wanted to get the user's name you should not just say "Name:". Instead give me a question to ask like this`,
+        `name: What is your name?`,
+        ``,
+        `Second, after the user answers with something, it is usually a good idea to say something back to continue the conversation`,
+        `For example, if the user says 'My name is "Jack"', you could respond with 'Nice to meet you Jack!' before going on to the next question`,
+        `Phew! Just re-read that if you need to before starting`,
+        `Let's start with your first question now (something like "name: What is your name?")`,
+    ])
 }
 
 function resp_1stq(msg, ctx) {
@@ -152,7 +188,7 @@ function resp_nxt(msg, ctx) {
     ctx.slot.resp = msg.replace(ctx.user_reply, () => '$$')
     ctx.kb.data.push(ctx.slot)
     ctx.slot = null
-    return `Added to KB. What's the next "slot: Question?"`
+    return `Added to KB. What's the next "info: Question?"`
 }
 
 function resp_nxtq(msg, ctx) {
@@ -163,7 +199,7 @@ function resp_nxtq(msg, ctx) {
     let s = msg.indexOf(':')
     if(s < 1) return [
         `To add a question to the Knowledge Base you have to tell me the question and where to save the answer. You must say something like 'location: Where do you live?'`,
-        `Please specify the Knowledge Base slot and the question that fills in the slot separated by a ':'. For example 'age: How old are you?'`,
+        `Please specify the Knowledge Base info you want and the question that fills in the info separated by a ':'. For example 'age: How old are you?'`,
     ]
 
     let slot = msg.substring(0, s).trim()
