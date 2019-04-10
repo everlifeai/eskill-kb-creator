@@ -178,8 +178,8 @@ double-ended-queue@^2.1.0-0:
   integrity sha1-ED01J/0xUo9AGIEwyEHv3XgmTlw=
 
 elife-utils@everlifeai/elife-utils:
-  version "0.1.0"
-  resolved "https://codeload.github.com/everlifeai/elife-utils/tar.gz/e788d18fa80eabf5ff916cd30fd25a47ff74971a"
+  version "0.2.0"
+  resolved "https://codeload.github.com/everlifeai/elife-utils/tar.gz/97c50f3aab4e5e6c13a8105440656823bba36262"
 
 engine.io-client@~3.2.0:
   version "3.2.1"
