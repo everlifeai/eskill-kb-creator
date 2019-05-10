@@ -279,7 +279,7 @@ const aimlBrainClient = new cote.Requester({
 
 function saveKB(kb) {
     aimlBrainClient.send({
-        type: 'save-kb',
+        type: 'save-kb-tpl',
         kb: kb,
     }, (err) => {
         if(err) u.showErr(err)
