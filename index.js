@@ -39,6 +39,8 @@ function registerWithCommMgr() {
         mstype: 'msg',
         mshelp: [
             { cmd: '/make_kb', txt: 'make a new KB' },
+            { cmd: '/export_kb', txt: 'export KB for manual editing' },
+            { cmd: '/reload_kb', txt: 'reload exported KB after editing' },
         ],
     }, (err) => {
         if(err) u.showErr(err)
@@ -57,12 +59,20 @@ function startMicroservice() {
     })
 
     svc.on('msg', (req, cb) => {
-        let replies = get_replies_1(req.msg)
-        if(!replies) return cb()
-        else {
+        if(req.msg == '/export_kb') {
             cb(null, true)
-            if(typeof replies == 'function') replies(req)
-            else replyFrom(replies, req)
+            xportKB()
+        } else if(req.msg == '/reload_kb') {
+            cb(null, true)
+            reloadKB()
+        } else {
+            let replies = get_replies_1(req.msg)
+            if(!replies) return cb()
+            else {
+                cb(null, true)
+                if(typeof replies == 'function') replies(req)
+                else replyFrom(replies, req)
+            }
         }
     })
 
@@ -282,6 +292,18 @@ function saveKB(kb) {
         type: 'save-kb-tpl',
         kb: kb,
     }, (err) => {
+        if(err) u.showErr(err)
+    })
+}
+
+function xportKB() {
+    aimlBrainClient.send({ type: 'xport-kb' }, (err) => {
+        if(err) u.showErr(err)
+    })
+}
+
+function reloadKB() {
+    aimlBrainClient.send({ type: 'reload-kb' }, (err) => {
         if(err) u.showErr(err)
     })
 }
