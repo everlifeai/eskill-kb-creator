@@ -1,6 +1,6 @@
 {
   "name": "eskill-kb-creator",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Create a Knowledge Base for your Avatar",
   "main": "index.js",
   "author": "charles.lobo@gmail.com",
